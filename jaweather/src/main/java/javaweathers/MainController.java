@@ -1,9 +1,12 @@
 package javaweathers;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.pavlobu.emojitextflow.EmojiTextFlow;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,304 +22,203 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class MainController implements Initializable {
+    // Logger for logging errors and other information
+    private static final Logger logger = Logger.getLogger(MainController.class.getName());
 
+    // Stage, scene, and root used for switching views
     private Stage stage;
     private Scene scene;
     private Parent root;
 
+    // Keeps track of the current module (0, 1, or 2)
     private static int module = 0;
-    private final Weather weather0 = new Weather();
-    private final Weather weather1 = new Weather();
-    private final Weather weather2 = new Weather();
 
-    private static String weather0City = "null", weather1City = "null", weather2City = "null";
+    // Array to store weather data for three different locations
+    static Weather weathers0 = new Weather();
+    static Weather weathers1 = new Weather();
+    static Weather weathers2 = new Weather();
+    
+    // Array to store the city names corresponding to each weather data
+    private static final String[] weatherCities = { "null", "null", "null" };
 
+    // FXML UI components
     @FXML
-    private Button addButton0, addButton1, addButton2;
-    // @FXML
-    // private TextField AddLocationTextField;
-    // @FXML
-    // private Button weekSunRiseSunSetButton0, weekSunRiseSunSetButton1, weekSunRiseSunSetButton2;
+    private Button addButton0, addButton1, addButton2, fiveDayForecastButton0, fiveDayForecastButton1, fiveDayForecastButton2, clear0, clear1, clear2;
     @FXML
-    private Button sevenDayForecastButton0, sevenDayForecastButton1, sevenDayForecastButton2;
-    @FXML
-    private Button clear0, clear1, clear2;
-    @FXML
-    private Label addLabel0, addLabel1, addLabel2;
+    private Label addLabel0, addLabel1, addLabel2, sunriseLabel0, sunriseLabel1, sunriseLabel2, sunsetLabel0, sunsetLabel1, sunsetLabel2;
     @FXML
     private ImageView weatherIcon0, weatherIcon1, weatherIcon2;
     @FXML
-    private Label description0, description1, description2;
+    private Label name0, name1, name2, description0, description1, description2, temp0, temp1, temp2, humid0, humid1, humid2, wind0, wind1, wind2, sunRise0, sunRise1, sunRise2, sunSet0, sunSet1, sunSet2, date0, date1, date2;
     @FXML
-    private ImageView timeOfDayIcon0, timeOfDayIcon1, timeOfDayIcon2;
-    @FXML
-    private Label location0, location1, location2;
-    @FXML
-    private Label temp0, temp1, temp2;
-    @FXML
-    private Label humid0, humid1, humid2;
-    @FXML
-    private Label visibility0, visibility1, visibility2;
-    @FXML
-    private Label sunRise0, sunRise1, sunRise2;
-    @FXML
-    private Label sunSet0, sunSet1, sunSet2;
-    @FXML
-    private Label sunRiseIcon0, sunRiseIcon1, sunRiseIcon2;
-    @FXML
-    private Label sunSetIcon0, sunSetIcon1, sunSetIcon2;
-    @FXML
-    private Label date0, date1, date2;
-
-    @FXML
-    protected boolean onAddButton0Click() {
-        Weather cool = new Weather();
-        cool.generateWeather("Riverside,us");
-
-        System.out.printf(cool.toString());
-        return true;
-    }
-
-    // @FXML
-    // private Button enter;
-
-
-    @SuppressWarnings("exports")
-    @FXML
-    public void switchToAddLocationView(ActionEvent event) throws IOException {
-        Button tempButton = (Button) event.getSource();
-//        System.out.println("You pressed: " + tempButton.getId());
-        // String id = tempButton.getId();
-        switch (tempButton.getId()) {
-            case "addButton0":
-                module = 0;
-                break;
-            case "addButton1":
-                module = 1;
-                break;
-            case "addButton2":
-                module = 2;
-                break;
-            default:
-                System.out.println("bug");
-                break;
-        }
-
-        root = FXMLLoader.load(getClass().getResource("AddLocationView.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 425, 275);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.sizeToScene();
-        stage.setResizable(false);
-        stage.show();
-    }
-
-    @SuppressWarnings("exports")
-    @FXML
-    public void switchToSevenDayForecastView(ActionEvent event) throws IOException {
-
-        Button tempButton = (Button) event.getSource();
-//        System.out.println("You pressed: " + tempButton.getId());
-//        String id = tempButton.getId();
-        switch (tempButton.getId()) {
-            case "sevenDayForecastButton0":
-                SevenDayForecastController.setForecast(weather0, weather0City);
-                break;
-            case "sevenDayForecastButton1":
-                SevenDayForecastController.setForecast(weather1, weather1City);
-                break;
-            case "sevenDayForecastButton2":
-                SevenDayForecastController.setForecast(weather2, weather2City);
-                break;
-            default:
-                System.out.println("bug");
-                break;
-        }
-
-        root = FXMLLoader.load(getClass().getResource("SevenDayForecastView.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 600, 350);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.sizeToScene();
-        stage.setResizable(false);
-        stage.show();
-    }
-
-    public static int getModule(){ return module;}
-
-    public static void setModule(int mod){ module = mod;}
-
-    public static void setWeatherCity(String city){
-        switch (module) {
-            case 0:
-                weather0City = city;
-                System.out.println("setting panel 0: " + city);
-                break;
-            case 1:
-                weather1City = city;
-                System.out.println("setting panel 1: " + city);
-                break;
-            case 2:
-                weather2City = city;
-                System.out.println("setting panel 2: " + city);
-                break;
-            default:
-                break;
-        }
-        System.out.println("Initializing panels");
-    }
-
-    private void getWeatherIcon(int panel, String description){
-
-        if(description.contains("clear sky")){
-            String file = "jaweather/src/main/resources/javaweathers/pics/sun_125x125_mainmenu.png";
-            setWeatherIcon(file, panel);
-        }
-        else if(description.contains("few clouds")){
-            String file = "jaweather/src/main/resources/javaweathers/pics/partCloudy_125x125_mainmenu.png";
-            setWeatherIcon(file, panel);
-        }
-        else if(description.contains("overcast clouds") || description.contains("broken clouds")  || description.contains("scattered clouds") || description.contains("haze")){
-            String file = "jaweather/src/main/resources/javaweathers/pics/clouds_125x125_mainmenu.png";
-            setWeatherIcon(file, panel);
-        }
-        else if(description.contains("rain")){
-            String file = "jaweather/src/main/resources/javaweathers/pics/rain_125x125_mainmenu.png";
-            setWeatherIcon(file, panel);
-        }
-
-    }
-    private void setWeatherIcon(String fileName, int panel){
-        File file = new File(fileName);
-        Image tempImage = new Image(file.toURI().toString());
-
-        switch (panel) {
-            case 0:
-                weatherIcon0.setImage(tempImage);
-                break;
-            case 1:
-                weatherIcon1.setImage(tempImage);
-                break;
-            case 2:
-                weatherIcon2.setImage(tempImage);
-                break;
-            default:
-                break;
-        }
-    }
+    private EmojiTextFlow emojiTextFlow0, emojiTextFlow1, riseIcon0, riseIcon1, riseIcon2, setIcon0, setIcon1, setIcon2, humidEmoji0, humidEmoji1, humidEmoji2, windEmoji0, windEmoji1, windEmoji2;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // System.out.println("initialize");
-        if(weather0City.compareTo("null") != 0){
-            if(!weather0.set) {
-                System.out.println("Panel 0:" + weather0City);
-                weather0.generateWeather(weather0City);
-                addButton0.setVisible(false);
-                temp0.setText(weather0.getCurrentTemp() + "˚F");
+        // Set welcome emoji text
+        emojiTextFlow0.parseAndAppend(":rainbow::new_moon::crescent_moon::wind_blowing_face::ocean::zap::new_moon_with_face::snowflake::full_moon_with_face:");
+        emojiTextFlow1.parseAndAppend(":sun_with_face::cloud::cloud_rain::volcano::cloud_lightning::first_quarter_moon_with_face::cloud_snow::waning_gibbous_moon::rainbow:");
 
-                humid0.setText(weather0.getHumidity() + "% Humidity");
-                visibility0.setText(weather0.getVisibility() + "% Visibility");
-                date0.setText(weather0.setDate());
+        // Set emojis for sunrise, sunset, wind, and humidity
+        setEmojis(riseIcon0, setIcon0, windEmoji0, humidEmoji0);
+        setEmojis(riseIcon1, setIcon1, windEmoji1, humidEmoji1);
+        setEmojis(riseIcon2, setIcon2, windEmoji2, humidEmoji2);
 
-                location0.setText(weather0City + ", " + weather0.getCountry());
-                addLabel0.setVisible(false);
-                clear0.setVisible(true);
+        // Initialize panels based on existing weather data
+        initializeWeatherPanel(0, weathers0, weatherCities[0]);
+        initializeWeatherPanel(1, weathers1, weatherCities[1]);
+        initializeWeatherPanel(2, weathers2, weatherCities[2]);
+    }
 
-                sunRise0.setText(weather0.ConvertSunRiseSunSet(weather0.getSunRise()));
-                sunSet0.setText(weather0.ConvertSunRiseSunSet(weather0.getSunSet()));
+    // Set emojis for sunrise, sunset, wind, and humidity
+    private void setEmojis(EmojiTextFlow riseIcon, EmojiTextFlow setIcon, EmojiTextFlow windEmoji, EmojiTextFlow humidEmoji) {
+        riseIcon.parseAndAppend(":sunrise:");
+        setIcon.parseAndAppend(":city_sunset:");
+        windEmoji.parseAndAppend(":wind_blowing_face:");
+        humidEmoji.parseAndAppend(":sweat_drops:");
+    }
 
-//                weekSunRiseSunSetButton0.setVisible(true);
-                sevenDayForecastButton0.setVisible(true);
-                weatherIcon0.setVisible(true);
-                timeOfDayIcon0.setVisible(true);
-                sunRiseIcon0.setVisible(true);
-                sunSetIcon0.setVisible(true);
-
-                sunRiseIcon0.setText("⬆ \nSunrise");
-                sunSetIcon0.setText("⬇ \nSunset");
-
-                getWeatherIcon(0, weather0.getDescription());
-                description0.setText(weather0.getDescription());
-            }
+    // Helper method to initialize a weather panel with data
+    private void initializeWeatherPanel(int panelIndex, Weather weather, String weatherCity) {
+        if (!weather.isEmpty()) {
+            initializePanel(panelIndex, weather, weatherCity);
+        } else {
+            clearPanel(panelIndex);
         }
-        else{
-            System.out.println("Panel 0: no city set");
+    }
+
+    // Initialize UI elements with weather data
+    private void initializePanel(int panelIndex, Weather weather, String weatherCity) {
+        weather = Weather.fetchWeatherForCity(weatherCity);
+        switch (panelIndex) {
+            case 0 -> updateUI(panelIndex, weather, addButton0, addLabel0, clear0, fiveDayForecastButton0, weatherIcon0, sunRise0, sunSet0, description0, temp0, humid0, wind0, date0, name0, riseIcon0, sunriseLabel0, setIcon0, sunsetLabel0, humidEmoji0, windEmoji0);
+            case 1 -> updateUI(panelIndex, weather, addButton1, addLabel1, clear1, fiveDayForecastButton1, weatherIcon1, sunRise1, sunSet1, description1, temp1, humid1, wind1, date1, name1, riseIcon1, sunriseLabel1, setIcon1, sunsetLabel1, humidEmoji1, windEmoji1);
+            case 2 -> updateUI(panelIndex, weather, addButton2, addLabel2, clear2, fiveDayForecastButton2, weatherIcon2, sunRise2, sunSet2, description2, temp2, humid2, wind2, date2, name2, riseIcon2, sunriseLabel2, setIcon2, sunsetLabel2, humidEmoji2, windEmoji2);
+            default -> logger.log(Level.WARNING, "Invalid panel index:", panelIndex);
         }
-        //save
-        if(weather1City.compareTo("null") != 0){
-            if(!weather1.set) {
-                System.out.println("Panel 1:" + weather1City);
-                weather1.generateWeather(weather1City);
-                addButton1.setVisible(false);
-                temp1.setText(weather1.getCurrentTemp() + "˚F");
+    }
 
-                humid1.setText(weather1.getHumidity() + "% Humidity");
-                visibility1.setText(weather1.getVisibility() + "% Visibility");
-                date1.setText(weather1.setDate());
+    // Helper method to update UI elements with weather data
+    private void updateUI(int panelIndex, Weather weather, Button addButton, Label addLabel, Button clear, Button fiveDayForecastButton, ImageView weatherIcon, Label sunRise, Label sunSet, Label description, Label temp, Label humid, Label wind, Label date, Label name, EmojiTextFlow riseIcon, Label sunriseLabel, EmojiTextFlow setIcon, Label sunsetLabel, EmojiTextFlow humidEmoji, EmojiTextFlow windEmoji) {
+        addButton.setVisible(false);
+        temp.setText(weather.getCurrentTemp() + "˚F");
+        humid.setText(weather.getHumidity() + "% Humidity");
+        wind.setText("Wind " + Math.round(weather.getWind()) + " mph");
+        date.setText(weather.getDate());
+        name.setText(weather.getName() + ", " + weather.getCountry());
+        addLabel.setVisible(false);
+        clear.setVisible(true);
+        sunRise.setText(weather.convertSunRiseSunSet(weather.getSunRise()));
+        sunSet.setText(weather.convertSunRiseSunSet(weather.getSunSet()));
+        fiveDayForecastButton.setVisible(true);
+        weatherIcon.setVisible(true);
+        setWeatherIcon(panelIndex, weather.getIcon());
+        description.setText(weather.getDescription());
+        riseIcon.setVisible(true);
+        setIcon.setVisible(true);
+        sunriseLabel.setVisible(true);
+        sunsetLabel.setVisible(true);
+        humidEmoji.setVisible(true);
+        windEmoji.setVisible(true);
+    }
 
-                location1.setText(weather1City + ", " + weather1.getCountry());
-                addLabel1.setVisible(false);
-                clear1.setVisible(true);
-
-                sunRise1.setText(weather1.ConvertSunRiseSunSet(weather1.getSunRise()));
-                sunSet1.setText(weather1.ConvertSunRiseSunSet(weather1.getSunSet()));
-
-//                weekSunRiseSunSetButton1.setVisible(true);
-                sevenDayForecastButton1.setVisible(true);
-                weatherIcon1.setVisible(true);
-                timeOfDayIcon1.setVisible(true);
-                sunRiseIcon1.setVisible(true);
-                sunSetIcon1.setVisible(true);
-
-                sunRiseIcon1.setText("⬆ \nSunrise");
-                sunSetIcon1.setText("⬇ \nSunset");
-
-                //set weather icon
-                getWeatherIcon(1, weather1.getDescription());
-                description1.setText(weather1.getDescription());
-            }
+    // Set the city for the current module and fetch the weather data
+    public static void setWeatherCity(String city) {
+        weatherCities[module] = city;
+        switch (module) {
+            case 0 -> weathers0 = Weather.fetchWeatherForCity(city);
+            case 1 -> weathers1 = Weather.fetchWeatherForCity(city);
+            case 2 -> weathers2 = Weather.fetchWeatherForCity(city);
+            default -> logger.log(Level.WARNING, "Invalid module index:", module);
         }
-        else{
-            System.out.println("Panel 1: no city set");
+    }
+
+    // Set the weather icon in the corresponding ImageView
+    private void setWeatherIcon(int panel, String iconCode) {
+        String iconUrl = "http://openweathermap.org/img/wn/" + iconCode + "@4x.png";
+        Image tempImage = new Image(iconUrl, true);
+        switch (panel) {
+            case 0 -> weatherIcon0.setImage(tempImage);
+            case 1 -> weatherIcon1.setImage(tempImage);
+            case 2 -> weatherIcon2.setImage(tempImage);
+            default -> logger.log(Level.WARNING, "Invalid panel index:", panel);
         }
+    }
 
-        if(weather2City.compareTo("null") != 0){
-            if(!weather2.set) {
-                System.out.println("Panel 2:" + weather2City);
-                weather2.generateWeather(weather2City);
-                addButton2.setVisible(false);
-                temp2.setText(weather2.getCurrentTemp() + "˚F");
-
-                humid2.setText(weather2.getHumidity() + "% Humidity");
-                visibility2.setText(weather2.getVisibility() + "% Visibility");
-                date2.setText(weather2.setDate());
-
-                location2.setText(weather2City + ", " + weather2.getCountry());
-                addLabel2.setVisible(false);
-                clear2.setVisible(true);
-
-                sunRise2.setText(weather2.ConvertSunRiseSunSet(weather2.getSunRise()));
-                sunSet2.setText(weather2.ConvertSunRiseSunSet(weather2.getSunSet()));
-
-//                weekSunRiseSunSetButton2.setVisible(true);
-                sevenDayForecastButton2.setVisible(true);
-                weatherIcon2.setVisible(true);
-                timeOfDayIcon2.setVisible(true);
-                sunRiseIcon2.setVisible(true);
-                sunSetIcon2.setVisible(true);
-
-                sunRiseIcon2.setText("⬆ \nSunrise");
-                sunSetIcon2.setText("⬇ \nSunset");
-
-                getWeatherIcon(2, weather2.getDescription());
-                description2.setText(weather2.getDescription());
-            }
+    // Helper method to clear the panel
+    private void clearPanel(int panelIndex) {
+        weatherCities[panelIndex] = "null";
+        switch (panelIndex) {
+            case 0 -> resetPanel(addButton0, addLabel0, clear0, fiveDayForecastButton0, weatherIcon0, sunRise0, sunSet0, description0, temp0, humid0, wind0, date0, name0, riseIcon0, sunriseLabel0, setIcon0, sunsetLabel0, humidEmoji0, windEmoji0);
+            case 1 -> resetPanel(addButton1, addLabel1, clear1, fiveDayForecastButton1, weatherIcon1, sunRise1, sunSet1, description1, temp1, humid1, wind1, date1, name1, riseIcon1, sunriseLabel1, setIcon1, sunsetLabel1, humidEmoji1, windEmoji1);
+            case 2 -> resetPanel(addButton2, addLabel2, clear2, fiveDayForecastButton2, weatherIcon2, sunRise2, sunSet2, description2, temp2, humid2, wind2, date2, name2, riseIcon2, sunriseLabel2, setIcon2, sunsetLabel2, humidEmoji2, windEmoji2);
+            default -> logger.log(Level.WARNING, "Invalid panel index:", panelIndex);
         }
-        else{
-            System.out.println("Panel 2: no city set");
+        switch (panelIndex) {
+            case 0 -> weathers0 = new Weather();
+            case 1 -> weathers1 = new Weather();
+            case 2 -> weathers2 = new Weather();
         }
+    }
+
+    // Helper method to reset UI elements for a panel
+    private void resetPanel(Button addButton, Label addLabel, Button clear, Button fiveDayForecastButton, ImageView weatherIcon, Label sunRise, Label sunSet, Label description, Label temp, Label humid, Label wind, Label date, Label name, EmojiTextFlow riseIcon, Label sunriseLabel, EmojiTextFlow setIcon, Label sunsetLabel, EmojiTextFlow humidEmoji, EmojiTextFlow windEmoji) {
+        addButton.setVisible(true);
+        addLabel.setVisible(true);
+        clear.setVisible(false);
+        fiveDayForecastButton.setVisible(false);
+        weatherIcon.setVisible(false);
+        sunRise.setText("");
+        sunSet.setText("");
+        description.setText("");
+        temp.setText("");
+        humid.setText("");
+        wind.setText("");
+        date.setText("");
+        name.setText("");
+        riseIcon.setVisible(false);
+        sunriseLabel.setVisible(false);
+        setIcon.setVisible(false);
+        sunsetLabel.setVisible(false);
+        humidEmoji.setVisible(false);
+        windEmoji.setVisible(false);
+    }
+
+    // Helper method to switch views
+    private void switchView(String fxml, ActionEvent event, int width, int height) throws IOException {
+        root = FXMLLoader.load(getClass().getResource(fxml));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, width, height);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    // Clear the data for the specified panel
+    @FXML
+    private void onClearButtonClick(ActionEvent event) throws IOException {
+        int buttonId = Integer.parseInt(((Button) event.getSource()).getId().replaceAll("\\D", ""));
+        clearPanel(buttonId);
+    }
+
+    // Switch to the "Add Location" view when an add button is clicked
+    @FXML
+    public void switchToAddLocationView(ActionEvent event) throws IOException {
+        module = Integer.parseInt(((Button) event.getSource()).getId().replaceAll("\\D", ""));
+        switchView("AddLocationView.fxml", event, 425, 275);
+    }
+
+    // Switch to the "Five Day Forecast" view when a forecast button is clicked
+    @FXML
+    public void switchToFiveDayForecastView(ActionEvent event) throws IOException {
+        int buttonId = Integer.parseInt(((Button) event.getSource()).getId().replaceAll("\\D", ""));
+        switch (buttonId) {
+            case 0 -> FiveDayForecastController.setForecast(weathers0, weathers0.getName());
+            case 1 -> FiveDayForecastController.setForecast(weathers1, weathers1.getName());
+            case 2 -> FiveDayForecastController.setForecast(weathers2, weathers2.getName());
+            default -> logger.log(Level.WARNING, "Invalid button ID:", buttonId);
+        }
+        switchView("FiveDayForecastView.fxml", event, 600, 350);
     }
 }

@@ -1,0 +1,24 @@
+# Set the default behavior to automatically normalize line endings.
+* text=auto
+
+# Explicitly declare text files you want to always be normalized and converted to native line endings on checkout.
+*.java text
+*.xml text
+*.fxml text
+*.properties text
+*.md text
+*.gitignore text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.jar binary
+*.war binary
+*.tar binary
+*.gz binary
+*.7z binary

@@ -1,0 +1,4 @@
+package javaweathers;
+class DayTest {
+
+}

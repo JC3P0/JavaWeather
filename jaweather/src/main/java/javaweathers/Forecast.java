@@ -1,130 +1,167 @@
 package javaweathers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Forecast {
-    private static final DecimalFormat df = new DecimalFormat("0.00");
-    public double lat, lon;
-    public int timeZone;
-    public long time;
-    public String LIST = "list";
-    public String WEATHER = "weather";
-    public String MAX = "temp_max";
-    public String MIN = "temp_min";
-    public String DESCRIPTION = "main";
-    private final String[] resultStr = new String[40];
+    private double lat, lon; // Latitude and longitude to generate URL request
+    private int timeZone; // Timezone of the forecast location
+    private final List<Day> days; // List to store forecast data for multiple days
+    private static final Properties properties = new Properties(); // Properties to store configuration data
 
-    private static Forecast uniqueInstance;
-    public static Forecast getInstance(){
-        if(uniqueInstance == null){
-            uniqueInstance = new Forecast();
+    // Default constructor initializes an empty list of days
+    public Forecast() {
+        days = new ArrayList<>();
+    }
+
+    // Parameterized constructor initializes all fields
+    public Forecast(double lat, double lon, int timeZone, List<Day> days) {
+        if (days == null) {
+            throw new IllegalArgumentException("ERROR:Forecast:Days list must not be null");
         }
-        return uniqueInstance;
-    }
-    public Forecast(Weather weatherObj){
-        this.lat = weatherObj.getLat();
-        this.lon = weatherObj.getLon();
-        this.timeZone = weatherObj.getTimezone();
+        this.lat = lat;
+        this.lon = lon;
+        this.timeZone = timeZone;
+        this.days = days;
     }
 
-    //getters
-    public double getLat() { return lat; }
-    public double getLon() { return lon; }
-    public int getTimeZone() { return timeZone; }
-    public long getTime() { return time; }
-    //setters
-    public void setLat(double lat) { this.lat = lat; }
-    public void setLon(double lon) { this.lon = lon; }
-    public void setTimeZone(int timeZone) { this.timeZone = timeZone; }
-    public void setTime(long time) { this.time = time; }
-    public Forecast(){}
+    // Static block to load configuration properties
+    static {
+        try (InputStream input = Weather.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (input != null) {
+                properties.load(input); // Load properties from config file
+            } else {
+                System.err.println("Sorry, unable to find config.properties");
+            }
+        } catch (IOException ex) {
+            System.err.println("Unable to load config.properties: " + ex.getMessage());
+        }
+    }
 
-    public void generateForecast(){
-        String requestURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + "8f0baa3c0e3577c3c9c5140b55e4343a";
-        HttpResponse<String> response = invokeGET(requestURL);
-    //    System.out.println(response.body());
+    // Static factory method to fetch forecast for a specific location
+    public static Forecast fetchForecastForLocation(double lat, double lon) {
+        // Validate latitude and longitude values
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+            // throw new IllegalArgumentException("ERROR:Forecast lat or lon is out of range, lat:" + lat + " lon:" + lon);
+            System.err.println("Invalid latitude or longitude values.");
+            return new Forecast(); // Return an empty Forecast object
+        }
 
+        String apiKey = properties.getProperty("api.key"); // Retrieve API key
+        String requestURL = String.format("http://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&appid=%s", lat, lon, apiKey);
+        HttpResponse<String> response = invokeGET(requestURL); // Fetch data from API
+
+        // Check if the response is valid
+        if (response == null || response.body() == null || response.statusCode() != 200) {
+            System.err.println("Failed to fetch forecast data. Response code: " + (response != null ? response.statusCode() : "null"));
+            return new Forecast(); // Return an empty Forecast object
+        }
+
+        // Parse the JSON response and create a Forecast object
         JSONObject obj = new JSONObject(response.body());
-
-        double resultMax = 0;
-        double resultMin = 0;
-        JSONArray weatherArray = obj.getJSONArray(LIST);
-
-        for(int i = 0; i < weatherArray.length(); i++) {
-
-            //get each day
-            JSONObject dayForecast = weatherArray.getJSONObject(i);
-
-            JSONObject weatherObject = dayForecast.getJSONArray(WEATHER).getJSONObject(0);
-            String description = weatherObject.getString(DESCRIPTION);
-
-            JSONObject temperatureObject = dayForecast.getJSONObject(DESCRIPTION);
-
-            this.time = (int) dayForecast.get("dt");
-
-            double high = KelvinToFahrenheit(temperatureObject.getDouble(MAX));
-            double low = KelvinToFahrenheit(temperatureObject.getDouble(MIN));
-
-            resultMax = resultMax + high;
-            resultMin = resultMin + low;
-
-            this.resultStr[i] = i + " " + time + " "  + description + " " + df.format(high) + " " + df.format(low) + " " + df.format(resultMax)  + " " + df.format(resultMin);
-        }
+        return parseForecastData(obj, lat, lon);
     }
 
-    public String ConvertTime(long time, int timeZone){
+    // Parse JSON data to create a Forecast object
+    private static Forecast parseForecastData(JSONObject obj, double lat, double lon) {
+        JSONArray weatherArray = obj.getJSONArray("list"); // Get the list of weather data entries
+        List<Day> days = new ArrayList<>();
+        int timeZone = obj.getJSONObject("city").getInt("timezone"); // Get the timezone from the response
+
+        // Process each day in the weather array
+        for (int i = 0; i < weatherArray.length(); i += 8) { // Every 8 entries represent a new day (3-hour intervals, 24 hours/day)
+            double highTemp = Double.MIN_VALUE;
+            double lowTemp = Double.MAX_VALUE;
+            long timestamp = 0;
+            String description = "";
+            String icon = "";
+
+            // Process each 3-hour entry within the day
+            for (int j = i; j < i + 8 && j < weatherArray.length(); j++) {
+                JSONObject dayForecast = weatherArray.getJSONObject(j);
+                JSONObject weatherObject = dayForecast.getJSONArray("weather").getJSONObject(0);
+                description = weatherObject.getString("main");
+                icon = weatherObject.getString("icon");
+
+                JSONObject temperatureObject = dayForecast.getJSONObject("main");
+                double high = kelvinToFahrenheit(temperatureObject.getDouble("temp_max"));
+                double low = kelvinToFahrenheit(temperatureObject.getDouble("temp_min"));
+
+                // Update high and low temperatures for the day
+                if (high > highTemp) {
+                    highTemp = high;
+                }
+                if (low < lowTemp) {
+                    lowTemp = low;
+                }
+                timestamp = dayForecast.getLong("dt");
+            }
+
+            // Add the day's forecast to the list
+            days.add(new Day(timestamp, highTemp, lowTemp, description, icon));
+        }
+
+        // Return the populated Forecast object
+        return new Forecast(lat, lon, timeZone, days);
+    }
+
+    public boolean isEmpty() {
+        return days.isEmpty() && lat == 0 && lon == 0;
+    }
+
+    // Convert Unix time to a formatted date string
+    public String convertTime(long time, int timeZone) {
         time = time * 1000;
         time = time + timeZone * 1000L;
         Date tempDate = new Date(time);
-        //date format = May 24
-        SimpleDateFormat dateObj = new SimpleDateFormat("MMM dd");
+        SimpleDateFormat dateObj = new SimpleDateFormat("MMM, dd");
         dateObj.setTimeZone(TimeZone.getTimeZone("UTC"));
         return dateObj.format(tempDate);
     }
-    private double KelvinToFahrenheit(double kelvin){
+
+    // Convert temperature from Kelvin to Fahrenheit
+    private static double kelvinToFahrenheit(double kelvin) {
         kelvin = kelvin - 273.15;
         kelvin = kelvin * 1.8;
         kelvin = kelvin + 32;
         return kelvin;
     }
 
+    // Helper method to invoke a GET request
     public static HttpResponse<String> invokeGET(String requestURL) {
-        // Build HttpClient for making web service calls
-        HttpClient client = HttpClient.newBuilder()
-                // configure the HttpClient so that it will follow any web redirects
-                .followRedirects(HttpClient.Redirect.ALWAYS)
-                .build();
-        // Create our web service request object
-        HttpRequest request = HttpRequest.newBuilder()
-                // set the URL using from the method input parameter
-                .uri(URI.create(requestURL))
-                // configure the request to call the GET method of the web service
-                .GET()
-                .build();
+        HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(requestURL)).GET().build();
         HttpResponse<String> response = null;
         try {
-            // Attempt to call the web service
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            // If successful, the web service should return a "200 OK" status code
-            if(response.statusCode() == 200) {
-                // System.out.println("Forecast: Hey it worked!");
-            }
-        } catch(IOException | InterruptedException e) {
-            System.out.println("Encountered a problem calling web service");
-            System.out.println(e.toString());
+        } catch (IOException | InterruptedException e) {
+            System.err.println("ERROR:Forecast:HttpResponse: " + e.getMessage());
         }
         return response;
     }
-    public String[] getResultStr() { return resultStr; }
+
+    // Getters and Setters
+    public double getLat() { return lat; }
+    public void setLat(double lat) { this.lat = lat; }
+
+    public double getLon() { return lon; }
+    public void setLon(double lon) { this.lon = lon; }
+
+    public int getTimeZone() { return timeZone; }
+    public void setTimeZone(int timeZone) { this.timeZone = timeZone; }
+
+    public List<Day> getDays() { return days; }
 }
