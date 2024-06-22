@@ -23,24 +23,24 @@
 
 ## Project Structure
 
-    - src/
-        - main/
-            - java/
-                - javaweathers/
-                    - AddLocationController.java: Controller for adding a new location.
-                    - Day.java: Represents a single day's weather data.
-                    - FiveDayForecastController.java: Controller for the 5-day forecast view.
-                    - Forecast.java: Fetches and parses the 5-day weather forecast data.
-                    - MainApplication.java: The main entry point of the application.
-                    - MainController.java: Controller for the main application view.
-                    - Weather.java: Fetches and parses the current weather data.
-            - resources/
-                - javaweathers/
-                    - icons/: Contains the icon files for the application.
-                    - AddLocationView.fxml: FXML file for the add location view.
-                    - FiveDayForecastView.fxml: FXML file for the 5-day forecast view.
-                    - main-view.fxml: FXML file for the main application view.
-            - config.properties: Configuration file for storing the OpenWeatherMap API key (not included in the repository).
+    src/
+    |-- main/
+    |   |-- java/
+    |   |   |-- javaweathers/
+    |   |   |   |-- AddLocationController.java: Controller for adding a new location.
+    |   |   |   |-- Day.java: Represents a single day's weather data.
+    |   |   |   |-- FiveDayForecastController.java: Controller for the 5-day forecast view.
+    |   |   |   |-- Forecast.java: Fetches and parses the 5-day weather forecast data.
+    |   |   |   |-- MainApplication.java: The main entry point of the application.
+    |   |   |   |-- MainController.java: Controller for the main application view.
+    |   |   |   |-- Weather.java: Fetches and parses the current weather data.
+    |   |-- resources/
+    |   |   |-- javaweathers/
+    |   |   |   |-- icons/: Contains the icon files for the application.
+    |   |   |   |-- AddLocationView.fxml: FXML file for the add location view.
+    |   |   |   |-- FiveDayForecastView.fxml: FXML file for the 5-day forecast view.
+    |   |   |   |-- main-view.fxml: FXML file for the main application view.
+    |   |-- config.properties: Configuration file for storing the OpenWeatherMap API key (not included in the repository).
 
 ## Usage
 
