@@ -24,6 +24,7 @@ logs/
 
 # Config files
 config.properties
+config.json.enc
 
 # Docker files
 Dockerfile
