@@ -1,6 +1,7 @@
 # JavaWeather
 
-    - JavaWeather is a weather application built using JavaFX. It fetches and displays current weather data and a 5-day forecast for a specified location using the OpenWeatherMap API.
+    - JavaWeather is a weather application built using JavaFX. 
+    - It collects and displays current weather data and a 5-day forecast for a specified location using the OpenWeatherMap API.
 
 ## Features
 
@@ -11,8 +12,10 @@
 
 ## Requirements
 
-    - Java: openjdk version "21.0.3"
+    - Java version: 21.0.3
     - JavaFX: javafx-sdk-21.0.3
+    - JavaFX: javafx-jmods-21.0.3
+    - Apache Maven 3.9.8
     - See `pom.xml` for the full list of dependencies using Maven.
 
 ## Setup
@@ -30,10 +33,11 @@
     |   |   |   |-- AddLocationController.java: Controller for adding a new location.
     |   |   |   |-- Day.java: Represents a single day's weather data.
     |   |   |   |-- FiveDayForecastController.java: Controller for the 5-day forecast view.
-    |   |   |   |-- Forecast.java: Fetches and parses the 5-day weather forecast data.
+    |   |   |   |-- Forecast.java: Collects and parses the 5-day weather forecast data.
+    |   |   |   |-- Launch.java: Ensures JavaFX application runs properly.
     |   |   |   |-- MainApplication.java: The main entry point of the application.
     |   |   |   |-- MainController.java: Controller for the main application view.
-    |   |   |   |-- Weather.java: Fetches and parses the current weather data.
+    |   |   |   |-- Weather.java: Collects and parses the current weather data.
     |   |-- resources/
     |   |   |-- javaweathers/
     |   |   |   |-- icons/: Contains the icon files for the application.
@@ -46,7 +50,7 @@
 
     - Add a location:
         Enter the city name in the "Add Location" screen.
-        Click the "Enter" button to fetch and display the weather data.
+        Click the "Enter" button to collect and display the weather data.
 
     - View the forecast:
         Click on the "Forecast" button to view the 5-day weather forecast.

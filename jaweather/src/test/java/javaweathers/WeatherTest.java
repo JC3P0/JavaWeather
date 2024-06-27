@@ -1,9 +1,7 @@
 package javaweathers;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Properties;
-
 import org.junit.jupiter.api.Test;
 
 public class WeatherTest {
