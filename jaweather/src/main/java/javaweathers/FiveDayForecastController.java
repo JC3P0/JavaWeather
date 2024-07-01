@@ -38,9 +38,9 @@ public class FiveDayForecastController implements Initializable {
     private Label location;
 
     // Sets the forecast data and location details
-    public static void setForecast(Weather weatherObj, String weatherCity) {
+    public static void setForecast(Weather weatherObj) {
         currentForecast = Forecast.fetchForecastForLocation(weatherObj.getLat(), weatherObj.getLon());
-        locationStr = weatherCity;
+        locationStr = weatherObj.getName();
         forecastCountry = weatherObj.getCountry();
     }
 

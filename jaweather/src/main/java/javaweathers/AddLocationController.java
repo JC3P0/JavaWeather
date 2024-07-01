@@ -48,19 +48,24 @@ public class AddLocationController {
         // If weather data is successfully retrieved, switch to the main view
         if (!currentWeather.isEmpty()) {
             MainController.setWeatherCity(formattedCity);
-            Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 900, 600);
-            stage.setScene(scene);
-            stage.centerOnScreen();
-            stage.sizeToScene();
-            stage.setResizable(false);
-            stage.show();
+            switchView(event, "main-view.fxml", 900, 600);
         } else {
             // Display an error message if the weather data could not be retrieved
             logger.log(Level.SEVERE, "ERROR creating weather object for city:", formattedCity);
             cityPrompt.setText(ERROR_INVALID_CITY);
         }
+    }
+
+    // Helper method to switch views
+    private void switchView(ActionEvent event, String fxml, int width, int height) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource(fxml));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, width, height);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.sizeToScene();
+        stage.setResizable(false);
+        stage.show();
     }
 
     public TextField getCityField() {

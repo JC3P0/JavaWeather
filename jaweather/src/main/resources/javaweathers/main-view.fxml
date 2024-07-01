@@ -10,9 +10,9 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.06856187290969899" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaweathers.MainController">
+<SplitPane dividerPositions="0.06856187290969899" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaweathers.MainController">
     <items>
-        <AnchorPane maxHeight="40.0" minHeight="40.0" minWidth="0.0" prefHeight="40.0" prefWidth="600.0">
+        <AnchorPane maxHeight="40.0" minHeight="40.0" minWidth="0.0" prefHeight="40.0" prefWidth="600.0" style="-fx-background-color: darkgray;">
             <children>
                 <EmojiTextFlow fx:id="emojiTextFlow1" layoutX="550.0" layoutY="3.0" prefHeight="40.0" prefWidth="350.0" tabSize="6" textAlignment="RIGHT" />
                 <EmojiTextFlow fx:id="emojiTextFlow0" accessibleRole="TEXT_FIELD" layoutX="-2.0" layoutY="3.0" prefHeight="40.0" prefWidth="350.0" tabSize="6" />
@@ -28,17 +28,17 @@
             <children>
                 <HBox prefHeight="555.0" prefWidth="900.0">
                     <children>
-                        <SplitPane dividerPositions="0.9899328859060402" maxHeight="555.0" maxWidth="300.0" minHeight="555.0" minWidth="300.0" prefHeight="555.0" prefWidth="300.0" style="-fx-background-color: white;">
+                        <SplitPane dividerPositions="0.5" maxHeight="555.0" maxWidth="300.0" minHeight="555.0" minWidth="300.0" prefHeight="555.0" prefWidth="300.0" style="-fx-background-color: darkgray;">
                             <items>
-                                <AnchorPane minHeight="0.0" minWidth="300.0" prefHeight="600.0" prefWidth="300.0">
+                                <AnchorPane minHeight="0.0" minWidth="300.0" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: darkgray;">
                                     <children>
                                         <Button fx:id="weekSunRiseSunSetButton0" layoutX="71.0" layoutY="401.0" mnemonicParsing="false" text="1 week Sunrise &amp; Sunset" visible="false" />
-                                        <Button fx:id="fiveDayForecastButton0" layoutX="98.0" layoutY="120.0" mnemonicParsing="false" onAction="#switchToFiveDayForecastView" text="5 Day Forecast">
+                                        <Button fx:id="fiveDayForecastButton0" layoutX="98.0" layoutY="120.0" mnemonicParsing="false" onAction="#switchToFiveDayForecastView" style="-fx-background-color: gray;" text="5 Day Forecast">
                                             <font>
                                                 <Font name="Lucida Sans Unicode" size="12.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="clear0" alignment="CENTER" contentDisplay="CENTER" layoutX="98.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear Location">
+                                        <Button fx:id="clear0" alignment="CENTER" contentDisplay="CENTER" layoutX="98.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClearButtonClick" style="-fx-background-color: gray;" text="Clear Location">
                                             <font>
                                                 <Font name="Lucida Sans Unicode" size="12.0" />
                                             </font>
@@ -79,7 +79,7 @@
                                             </font>
                                         </Label>
                                         <ImageView fx:id="weatherIcon0" fitHeight="125.0" fitWidth="125.0" layoutX="11.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true" />
-                                        <Button fx:id="addButton0" layoutX="120.0" layoutY="274.0" mnemonicParsing="false" onAction="#switchToAddLocationView" text="+">
+                                        <Button fx:id="addButton0" layoutX="120.0" layoutY="274.0" mnemonicParsing="false" onAction="#switchToAddLocationView" style="-fx-background-color: gray;" text="+">
                                             <font>
                                                 <Font name="Tahoma Bold" size="25.0" />
                                             </font>
@@ -89,7 +89,7 @@
                                                 <Font name="Tahoma" size="19.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="description0" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="286.0" prefHeight="48.0" prefWidth="138.0" text="scattered clouds with wind warnings" textAlignment="CENTER" wrapText="true">
+                                        <Label fx:id="description0" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="286.0" prefHeight="72.0" prefWidth="138.0" text="scattered clouds with wind warnings" textAlignment="CENTER" wrapText="true">
                                             <font>
                                                 <Font name="Comic Sans MS" size="16.0" />
                                             </font>
@@ -113,23 +113,23 @@
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="356.0" prefWidth="140.0" />
                             </items>
                         </SplitPane>
-                        <SplitPane dividerPositions="0.9899328859060402" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: white;">
+                        <SplitPane dividerPositions="0.5" prefHeight="600.0" prefWidth="300.0">
                             <items>
-                                <AnchorPane minHeight="0.0" minWidth="300.0" prefHeight="600.0" prefWidth="300.0">
+                                <AnchorPane minHeight="0.0" minWidth="300.0" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: darkgray;">
                                     <children>
                                         <ImageView fx:id="weatherIcon1" fitHeight="125.0" fitWidth="125.0" layoutX="11.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true" />
-                                        <Button fx:id="clear1" alignment="CENTER" contentDisplay="CENTER" layoutX="100.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear Location">
+                                        <Button fx:id="clear1" alignment="CENTER" contentDisplay="CENTER" layoutX="100.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClearButtonClick" style="-fx-background-color: gray;" text="Clear Location">
                                             <font>
                                                 <Font name="Lucida Sans Unicode" size="12.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="addButton1" layoutX="120.0" layoutY="274.0" mnemonicParsing="false" onAction="#switchToAddLocationView" text="+">
+                                        <Button fx:id="addButton1" layoutX="120.0" layoutY="274.0" mnemonicParsing="false" onAction="#switchToAddLocationView" style="-fx-background-color: gray;" text="+">
                                             <font>
                                                 <Font name="Tahoma Bold" size="25.0" />
                                             </font>
                                         </Button>
                                         <Button fx:id="weekSunRiseSunSetButton1" layoutX="71.0" layoutY="401.0" mnemonicParsing="false" text="1 week Sunrise &amp; Sunset" visible="false" />
-                                        <Button fx:id="fiveDayForecastButton1" layoutX="99.0" layoutY="120.0" mnemonicParsing="false" onAction="#switchToFiveDayForecastView" text="5 Day Forecast">
+                                        <Button fx:id="fiveDayForecastButton1" layoutX="99.0" layoutY="120.0" mnemonicParsing="false" onAction="#switchToFiveDayForecastView" style="-fx-background-color: gray;" text="5 Day Forecast">
                                             <font>
                                                 <Font name="Lucida Sans Unicode" size="12.0" />
                                             </font>
@@ -174,7 +174,7 @@
                                                 <Font name="Tahoma" size="19.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="description1" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="286.0" prefHeight="48.0" prefWidth="138.0" text="scattered clouds with wind warnings" textAlignment="CENTER" wrapText="true">
+                                        <Label fx:id="description1" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="286.0" prefHeight="72.0" prefWidth="138.0" text="scattered clouds with wind warnings" textAlignment="CENTER" wrapText="true">
                                             <font>
                                                 <Font name="Comic Sans MS" size="16.0" />
                                             </font>
@@ -198,15 +198,15 @@
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
                             </items>
                         </SplitPane>
-                        <AnchorPane prefHeight="600.0" prefWidth="300.0">
+                        <AnchorPane prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: darkgray;">
                             <children>
                                 <Button fx:id="weekSunRiseSunSetButton2" layoutX="73.0" layoutY="401.0" mnemonicParsing="false" text="1 week Sunrise &amp; Sunset" visible="false" />
-                                <Button fx:id="fiveDayForecastButton2" layoutX="99.0" layoutY="120.0" mnemonicParsing="false" onAction="#switchToFiveDayForecastView" text="5 Day Forecast">
+                                <Button fx:id="fiveDayForecastButton2" layoutX="99.0" layoutY="120.0" mnemonicParsing="false" onAction="#switchToFiveDayForecastView" style="-fx-background-color: gray;" text="5 Day Forecast">
                                     <font>
                                         <Font name="Lucida Sans Unicode" size="12.0" />
                                     </font>
                                 </Button>
-                                <Button fx:id="clear2" layoutX="100.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear Location">
+                                <Button fx:id="clear2" layoutX="100.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClearButtonClick" style="-fx-background-color: gray;" text="Clear Location">
                                     <font>
                                         <Font name="Lucida Sans Unicode" size="12.0" />
                                     </font>
@@ -247,7 +247,7 @@
                                     </font>
                                 </Label>
                                 <ImageView fx:id="weatherIcon2" fitHeight="125.0" fitWidth="125.0" layoutX="11.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true" />
-                                <Button fx:id="addButton2" layoutX="120.0" layoutY="274.0" mnemonicParsing="false" onAction="#switchToAddLocationView" text="+">
+                                <Button fx:id="addButton2" layoutX="120.0" layoutY="274.0" mnemonicParsing="false" onAction="#switchToAddLocationView" style="-fx-background-color: gray;" text="+">
                                     <font>
                                         <Font name="Tahoma Bold" size="25.0" />
                                     </font>
@@ -257,7 +257,7 @@
                                         <Font name="Tahoma" size="19.0" />
                                     </font>
                                 </Label>
-                                <Label fx:id="description2" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="286.0" prefHeight="48.0" prefWidth="138.0" text="scattered clouds with wind warnings" textAlignment="CENTER" wrapText="true">
+                                <Label fx:id="description2" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="286.0" prefHeight="72.0" prefWidth="138.0" text="scattered clouds with wind warnings" textAlignment="CENTER" wrapText="true">
                                     <font>
                                         <Font name="Comic Sans MS" size="16.0" />
                                     </font>

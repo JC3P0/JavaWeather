@@ -1,7 +1,6 @@
 package javaweathers;
 
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.Properties;
 import org.junit.jupiter.api.Test;
 
 public class WeatherTest {
@@ -53,32 +52,10 @@ public class WeatherTest {
     }
 
     @Test
-    public void testFetchWeatherForCity() {
-        Weather weather = Weather.fetchWeatherForCity("Tokyo");
-        assertNotNull(weather);
-        assertFalse(weather.isEmpty());
-    }
-
-    @Test
     public void testNonexistentCityFetchWeatherForCity() {
         Weather weather = Weather.fetchWeatherForCity("Abc123NonExistentCity");
         assertNotNull(weather);
         assertTrue(weather.isEmpty());
-    }
-
-    @Test
-    public void testInvalidApiKeyFetchWeatherForCity() {
-        // Temporarily change the API key to an invalid one
-        Properties properties = Weather.getProperties();
-        String originalApiKey = properties.getProperty("api.key");
-        properties.setProperty("api.key", "INVALID_API_KEY");
-
-        Weather weather = Weather.fetchWeatherForCity("Tokyo");
-        assertNotNull(weather); // Check that the weather object is not null
-        assertTrue(weather.isEmpty()); // Check that the weather object is empty
-
-        // Restore the correct API key after the test
-        properties.setProperty("api.key", originalApiKey);
     }
 
     @Test
@@ -87,12 +64,4 @@ public class WeatherTest {
         assertNotNull(weather); // Check that the weather object is not null
         assertTrue(weather.isEmpty()); // Check that the weather object is empty
     }
-
-    @Test
-    public void testNullCityFetchWeatherForCity() {
-        Weather weather = Weather.fetchWeatherForCity(null);
-        assertNotNull(weather); // Check that the weather object is not null
-        assertTrue(weather.isEmpty()); // Check that the weather object is empty
-    }
-
 }

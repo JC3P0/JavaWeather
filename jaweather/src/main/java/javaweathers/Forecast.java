@@ -1,7 +1,6 @@
 package javaweathers;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,16 +11,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Forecast {
+    private static final Logger logger = Logger.getLogger(Forecast.class.getName());
     private double lat, lon; // Latitude and longitude to generate URL request
     private int timeZone; // Timezone of the forecast location
     private final List<Day> days; // List to store forecast data for multiple days
-    private static final Properties properties = new Properties(); // Properties to store configuration data
-
+    
     // Default constructor initializes an empty list of days
     public Forecast() {
         days = new ArrayList<>();
@@ -38,35 +39,33 @@ public class Forecast {
         this.days = days;
     }
 
-    // Static block to load configuration properties
-    static {
-        try (InputStream input = Weather.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (input != null) {
-                properties.load(input); // Load properties from config file
-            } else {
-                System.err.println("Sorry, unable to find config.properties");
-            }
-        } catch (IOException ex) {
-            System.err.println("Unable to load config.properties: " + ex.getMessage());
-        }
-    }
-
     // Static factory method to fetch forecast for a specific location
     public static Forecast fetchForecastForLocation(double lat, double lon) {
         // Validate latitude and longitude values
         if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
-            // throw new IllegalArgumentException("ERROR:Forecast lat or lon is out of range, lat:" + lat + " lon:" + lon);
-            System.err.println("Invalid latitude or longitude values.");
+            logger.log(Level.SEVERE, "Invalid latitude or longitude values.");
             return new Forecast(); // Return an empty Forecast object
         }
 
-        String apiKey = properties.getProperty("api.key"); // Retrieve API key
+        String apiKey = null;
+        try {
+            Properties config = ConfigManager.loadConfig();
+            apiKey = config.getProperty("apiKey");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Unable to load API key from config", e);
+        }
+
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            logger.log(Level.SEVERE, "API key is missing or empty in config");
+            return new Forecast(); // Return an empty Forecast object
+        }
+
         String requestURL = String.format("http://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&appid=%s", lat, lon, apiKey);
         HttpResponse<String> response = invokeGET(requestURL); // Fetch data from API
 
         // Check if the response is valid
         if (response == null || response.body() == null || response.statusCode() != 200) {
-            System.err.println("Failed to fetch forecast data. Response code: " + (response != null ? response.statusCode() : "null"));
+            logger.log(Level.SEVERE, "Failed to fetch forecast data. Response code: " + (response != null ? response.statusCode() : "null"));
             return new Forecast(); // Return an empty Forecast object
         }
 
@@ -148,7 +147,7 @@ public class Forecast {
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            System.err.println("ERROR:Forecast:HttpResponse: " + e.getMessage());
+            logger.log(Level.SEVERE, "ERROR:Forecast:HttpResponse", e);
         }
         return response;
     }

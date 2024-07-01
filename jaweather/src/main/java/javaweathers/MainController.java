@@ -24,23 +24,16 @@ import javafx.stage.Stage;
 public class MainController implements Initializable {
     // Logger for logging errors and other information
     private static final Logger logger = Logger.getLogger(MainController.class.getName());
-
     // Stage, scene, and root used for switching views
     private Stage stage;
     private Scene scene;
     private Parent root;
-
     // Keeps track of the current module (0, 1, or 2)
     private static int module = 0;
-
     // Array to store weather data for three different locations
     static Weather weathers0 = new Weather();
     static Weather weathers1 = new Weather();
     static Weather weathers2 = new Weather();
-    
-    // Array to store the city names corresponding to each weather data
-    private static final String[] weatherCities = { "null", "null", "null" };
-
     // FXML UI components
     @FXML
     private Button addButton0, addButton1, addButton2, fiveDayForecastButton0, fiveDayForecastButton1, fiveDayForecastButton2, clear0, clear1, clear2;
@@ -65,17 +58,17 @@ public class MainController implements Initializable {
         setEmojis(riseIcon2, setIcon2, windEmoji2, humidEmoji2);
 
         // Initialize panels based on existing weather data
-        initializeWeatherPanel(0, weathers0, weatherCities[0]);
-        initializeWeatherPanel(1, weathers1, weatherCities[1]);
-        initializeWeatherPanel(2, weathers2, weatherCities[2]);
+        initializeWeatherPanel(0, weathers0, weathers0.getName());
+        initializeWeatherPanel(1, weathers1, weathers1.getName());
+        initializeWeatherPanel(2, weathers2, weathers2.getName());
     }
 
     // Set emojis for sunrise, sunset, wind, and humidity
     private void setEmojis(EmojiTextFlow riseIcon, EmojiTextFlow setIcon, EmojiTextFlow windEmoji, EmojiTextFlow humidEmoji) {
         riseIcon.parseAndAppend(":sunrise:");
         setIcon.parseAndAppend(":city_sunset:");
-        windEmoji.parseAndAppend(":wind_blowing_face:");
-        humidEmoji.parseAndAppend(":sweat_drops:");
+        windEmoji.parseAndAppend(":dash:");
+        humidEmoji.parseAndAppend(":droplet:");
     }
 
     // Helper method to initialize a weather panel with data
@@ -124,7 +117,6 @@ public class MainController implements Initializable {
 
     // Set the city for the current module and fetch the weather data
     public static void setWeatherCity(String city) {
-        weatherCities[module] = city;
         switch (module) {
             case 0 -> weathers0 = Weather.fetchWeatherForCity(city);
             case 1 -> weathers1 = Weather.fetchWeatherForCity(city);
@@ -147,7 +139,6 @@ public class MainController implements Initializable {
 
     // Helper method to clear the panel
     private void clearPanel(int panelIndex) {
-        weatherCities[panelIndex] = "null";
         switch (panelIndex) {
             case 0 -> resetPanel(addButton0, addLabel0, clear0, fiveDayForecastButton0, weatherIcon0, sunRise0, sunSet0, description0, temp0, humid0, wind0, date0, name0, riseIcon0, sunriseLabel0, setIcon0, sunsetLabel0, humidEmoji0, windEmoji0);
             case 1 -> resetPanel(addButton1, addLabel1, clear1, fiveDayForecastButton1, weatherIcon1, sunRise1, sunSet1, description1, temp1, humid1, wind1, date1, name1, riseIcon1, sunriseLabel1, setIcon1, sunsetLabel1, humidEmoji1, windEmoji1);
@@ -213,10 +204,12 @@ public class MainController implements Initializable {
     @FXML
     public void switchToFiveDayForecastView(ActionEvent event) throws IOException {
         int buttonId = Integer.parseInt(((Button) event.getSource()).getId().replaceAll("\\D", ""));
+        // Forecast testForecast = Forecast.fetchWeatherForCity(formattedCity);
+        // if ()
         switch (buttonId) {
-            case 0 -> FiveDayForecastController.setForecast(weathers0, weathers0.getName());
-            case 1 -> FiveDayForecastController.setForecast(weathers1, weathers1.getName());
-            case 2 -> FiveDayForecastController.setForecast(weathers2, weathers2.getName());
+            case 0 -> FiveDayForecastController.setForecast(weathers0);
+            case 1 -> FiveDayForecastController.setForecast(weathers1);
+            case 2 -> FiveDayForecastController.setForecast(weathers2);
             default -> logger.log(Level.WARNING, "Invalid button ID:", buttonId);
         }
         switchView("FiveDayForecastView.fxml", event, 600, 350);

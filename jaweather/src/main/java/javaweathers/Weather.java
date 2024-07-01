@@ -1,7 +1,6 @@
 package javaweathers;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -10,30 +9,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Weather {
 
+    private static final Logger logger = Logger.getLogger(Weather.class.getName());
     // Fields to store weather data
     private int currentTemp, maxTemp, minTemp, humidity, visibility, timezone;
     private long sunrise, sunset, time;
     private double lon, lat, wind;
     private String description, country, name, icon;
     private static final Properties properties = new Properties();
-
-    static {
-        try (InputStream input = Weather.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (input != null) {
-                properties.load(input);
-            } else {
-                System.out.println("Sorry, unable to find config.properties");
-            }
-        } catch (IOException ex) {
-            System.out.println("Unable to load config.properties");
-        }
-    }
 
     // Default constructor for creating an empty Weather object
     public Weather() {
@@ -89,8 +79,20 @@ public class Weather {
 
     // Create a Weather object for a given city
     public static Weather fetchWeatherForCity(String city) {
-        String apiKey = properties.getProperty("api.key");
-        String requestURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + apiKey;
+        String apiKey = null;
+        try {
+            Properties config = ConfigManager.loadConfig();
+            apiKey = config.getProperty("apiKey");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Unable to load API key from config", e);
+        }
+
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            logger.log(Level.SEVERE, "API key is missing or empty in config");
+            return new Weather(); // Return an empty Weather object
+        }
+
+        String requestURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city.replace(" ", "+") + "&APPID=" + apiKey;
         HttpResponse<String> response = invokeGET(requestURL);
 
         if (response == null || response.body() == null || response.statusCode() != 200) {
@@ -198,7 +200,7 @@ public class Weather {
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            System.out.println("ERROR:Weather:HttpResponse");
+            logger.log(Level.SEVERE, "ERROR:Weather:HttpResponse", e);
         }
         return response;
     }
