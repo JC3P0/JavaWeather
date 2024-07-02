@@ -1,6 +1,6 @@
 # JavaWeather
 
-    - JavaWeather is a weather application built using JavaFX. 
+    - JavaWeather is a simple weather application displaying weather data to a GUI built using JavaFX. 
     - It collects and displays current weather data and a 5-day forecast for a specified location using the free OpenWeatherMap API.
 
 ## Features
@@ -51,6 +51,23 @@
         |   |   |-- javaweathers/
         |   |   |   |-- WeatherTest.java: Unit tests for the Weather class.
         |   |   |   |-- ForecastTest.java: Unit tests for the Forecast class.
+
+## Screenshots
+
+### API Input
+![API Input](screenshots/API_INPUT.png)
+
+### Blank Menu
+![Blank Menu](screenshots/BLANK_MENU.png)
+
+### Add Location
+![Add Location](screenshots/ADD_LOCATION.png)
+
+### Populated Menu
+![Populated Menu](screenshots/POPULATED_MENU.png)
+
+### 5 Day Forecast
+![5 Day Forecast](screenshots/5_DAY_FORECAST.png)
 
 ## Usage
 
