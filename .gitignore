@@ -25,7 +25,7 @@ logs/
 # Config files
 config.properties
 config.json.enc
-
+CLAUDE.md
 # Docker files
 Dockerfile
 # Shell scripts
