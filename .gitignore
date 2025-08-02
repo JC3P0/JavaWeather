@@ -15,6 +15,11 @@ buildNumber.properties
 # VS Code specific
 .vscode/
 
+# IntelliJ IDEA specific
+.idea/
+
+.DS_Store
+
 # Node specific
 node_modules/
 
