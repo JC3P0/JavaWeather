@@ -23,6 +23,9 @@ public class Weather {
     private long sunrise, sunset, time;
     private double lon, lat, wind;
     private String description, country, name, icon;
+    // Store both Fahrenheit and Celsius temperatures
+    private int currentTempF, maxTempF, minTempF;
+    private int currentTempC, maxTempC, minTempC;
     private static final Properties properties = new Properties();
 
     // Default constructor for creating an empty Weather object
@@ -30,7 +33,7 @@ public class Weather {
     }
 
     // Parameterized constructor for creating a Weather object with specific data
-    public Weather(int currentTemp, int maxTemp, int minTemp, int humidity, int visibility, int timezone, long sunrise, long sunset, long time, double lon, double lat, double wind, String description, String country, String name, String icon) {
+    public Weather(int currentTemp, int maxTemp, int minTemp, int currentTempF, int maxTempF, int minTempF, int currentTempC, int maxTempC, int minTempC, int humidity, int visibility, int timezone, long sunrise, long sunset, long time, double lon, double lat, double wind, String description, String country, String name, String icon) {
         if (currentTemp < -100 || currentTemp > 150) {
             throw new IllegalArgumentException("Current temperature out of range: " + currentTemp);
         }
@@ -62,6 +65,12 @@ public class Weather {
         this.currentTemp = currentTemp;
         this.maxTemp = maxTemp;
         this.minTemp = minTemp;
+        this.currentTempF = currentTempF;
+        this.maxTempF = maxTempF;
+        this.minTempF = minTempF;
+        this.currentTempC = currentTempC;
+        this.maxTempC = maxTempC;
+        this.minTempC = minTempC;
         this.humidity = humidity;
         this.visibility = visibility;
         this.timezone = timezone;
@@ -116,9 +125,15 @@ public class Weather {
         String name = obj.getString("name");
         double wind = windObj.getDouble("speed");
         String description = weatherDesc.getString("description");
-        int currentTemp = kelvinToFahrenheit(mainObj.getDouble("temp"));
-        int maxTemp = kelvinToFahrenheit(mainObj.getDouble("temp_max"));
-        int minTemp = kelvinToFahrenheit(mainObj.getDouble("temp_min"));
+        
+        // Calculate both Fahrenheit and Celsius temperatures
+        int currentTempF = kelvinToFahrenheit(mainObj.getDouble("temp"));
+        int maxTempF = kelvinToFahrenheit(mainObj.getDouble("temp_max"));
+        int minTempF = kelvinToFahrenheit(mainObj.getDouble("temp_min"));
+        int currentTempC = kelvinToCelsius(mainObj.getDouble("temp"));
+        int maxTempC = kelvinToCelsius(mainObj.getDouble("temp_max"));
+        int minTempC = kelvinToCelsius(mainObj.getDouble("temp_min"));
+        
         int humidity = mainObj.getInt("humidity");
         int visibility = (int) (obj.getDouble("visibility") / 1000);
         long sunrise = sysObj.getLong("sunrise");
@@ -129,7 +144,7 @@ public class Weather {
         double lat = coordObj.getDouble("lat");
         long time = obj.getLong("dt");
 
-        return new Weather(currentTemp, maxTemp, minTemp, humidity, visibility, timezone, sunrise, sunset, time, lon, lat, wind, description, country, name, icon);
+        return new Weather(currentTempF, maxTempF, minTempF, currentTempF, maxTempF, minTempF, currentTempC, maxTempC, minTempC, humidity, visibility, timezone, sunrise, sunset, time, lon, lat, wind, description, country, name, icon);
     }
 
     // Method to check if the Weather object is empty
@@ -140,6 +155,11 @@ public class Weather {
     // Convert temperature from Kelvin to Fahrenheit
     private static int kelvinToFahrenheit(double kelvin) {
         return (int) Math.round((kelvin - 273.15) * 1.8 + 32);
+    }
+
+    // Convert temperature from Kelvin to Celsius
+    private static int kelvinToCelsius(double kelvin) {
+        return (int) Math.round(kelvin - 273.15);
     }
 
     // Convert sunrise and sunset times to readable format
@@ -165,6 +185,14 @@ public class Weather {
     public int getCurrentTemp() { return currentTemp; }
     public int getMaxTemp() { return maxTemp; }
     public int getMinTemp() { return minTemp; }
+    // Getters for Fahrenheit temperatures
+    public int getCurrentTempF() { return currentTempF; }
+    public int getMaxTempF() { return maxTempF; }
+    public int getMinTempF() { return minTempF; }
+    // Getters for Celsius temperatures
+    public int getCurrentTempC() { return currentTempC; }
+    public int getMaxTempC() { return maxTempC; }
+    public int getMinTempC() { return minTempC; }
     public String getDescription() { return description; }
     public String getName() { return name; }
     public int getHumidity() { return humidity; }

@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="425.0" style="-fx-background-color: darkgray;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaweathers.AddLocationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="425.0" style="-fx-background-color: darkgray;" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaweathers.AddLocationController">
    <children>
-      <Button layoutX="186.0" layoutY="176.0" mnemonicParsing="false" onAction="#switchToMainView" style="-fx-background-color: gray;" text="Enter">
+      <Button layoutX="186.0" layoutY="176.0" mnemonicParsing="false" onAction="#switchToMainView" style="-fx-background-color: #6B8E6B;" text="Enter">
          <font>
             <Font name="Lucida Sans Unicode" size="12.0" />
          </font></Button>

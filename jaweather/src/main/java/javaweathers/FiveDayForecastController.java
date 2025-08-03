@@ -21,6 +21,7 @@ public class FiveDayForecastController implements Initializable {
 
     private static Forecast currentForecast;
     private static String locationStr, forecastCountry;
+    private static boolean useFahrenheit = true;
 
     @FXML
     private Label high1, high2, high3, high4, high5;
@@ -38,15 +39,22 @@ public class FiveDayForecastController implements Initializable {
     private Label location;
 
     // Sets the forecast data and location details
-    public static void setForecast(Weather weatherObj) {
+    public static void setForecast(Weather weatherObj, boolean useFahrenheitUnit) {
         currentForecast = Forecast.fetchForecastForLocation(weatherObj.getLat(), weatherObj.getLon());
         locationStr = weatherObj.getName();
         forecastCountry = weatherObj.getCountry();
+        useFahrenheit = useFahrenheitUnit;
     }
 
     // Sets the label text with the formatted temperature
     private void setLabel(Label label, double value) {
-        label.setText(Math.round(value) + " °F");
+        if (useFahrenheit) {
+            label.setText(Math.round(value) + " °F");
+        } else {
+            // Convert from Fahrenheit to Celsius for display
+            double celsius = (value - 32) * 5.0 / 9.0;
+            label.setText(Math.round(celsius) + " °C");
+        }
     }
 
     // Sets the weather icon for the ImageView

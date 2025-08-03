@@ -34,6 +34,8 @@ public class MainController implements Initializable {
     static Weather weathers0 = new Weather();
     static Weather weathers1 = new Weather();
     static Weather weathers2 = new Weather();
+    // Track temperature unit for each panel (true = Fahrenheit, false = Celsius)
+    private static boolean[] useFahrenheit = {true, true, true};
     // FXML UI components
     @FXML
     private Button addButton0, addButton1, addButton2, fiveDayForecastButton0, fiveDayForecastButton1, fiveDayForecastButton2, clear0, clear1, clear2;
@@ -42,7 +44,9 @@ public class MainController implements Initializable {
     @FXML
     private ImageView weatherIcon0, weatherIcon1, weatherIcon2;
     @FXML
-    private Label name0, name1, name2, description0, description1, description2, temp0, temp1, temp2, humid0, humid1, humid2, wind0, wind1, wind2, sunRise0, sunRise1, sunRise2, sunSet0, sunSet1, sunSet2, date0, date1, date2;
+    private Label name0, name1, name2, description0, description1, description2, humid0, humid1, humid2, wind0, wind1, wind2, sunRise0, sunRise1, sunRise2, sunSet0, sunSet1, sunSet2, date0, date1, date2;
+    @FXML
+    private Button temp0, temp1, temp2;
     @FXML
     private EmojiTextFlow emojiTextFlow0, emojiTextFlow1, riseIcon0, riseIcon1, riseIcon2, setIcon0, setIcon1, setIcon2, humidEmoji0, humidEmoji1, humidEmoji2, windEmoji0, windEmoji1, windEmoji2;
 
@@ -92,9 +96,14 @@ public class MainController implements Initializable {
     }
 
     // Helper method to update UI elements with weather data
-    private void updateUI(int panelIndex, Weather weather, Button addButton, Label addLabel, Button clear, Button fiveDayForecastButton, ImageView weatherIcon, Label sunRise, Label sunSet, Label description, Label temp, Label humid, Label wind, Label date, Label name, EmojiTextFlow riseIcon, Label sunriseLabel, EmojiTextFlow setIcon, Label sunsetLabel, EmojiTextFlow humidEmoji, EmojiTextFlow windEmoji) {
+    private void updateUI(int panelIndex, Weather weather, Button addButton, Label addLabel, Button clear, Button fiveDayForecastButton, ImageView weatherIcon, Label sunRise, Label sunSet, Label description, Button temp, Label humid, Label wind, Label date, Label name, EmojiTextFlow riseIcon, Label sunriseLabel, EmojiTextFlow setIcon, Label sunsetLabel, EmojiTextFlow humidEmoji, EmojiTextFlow windEmoji) {
         addButton.setVisible(false);
-        temp.setText(weather.getCurrentTemp() + "˚F");
+        // Set temperature text based on current unit preference
+        if (useFahrenheit[panelIndex]) {
+            temp.setText(weather.getCurrentTempF() + "˚F");
+        } else {
+            temp.setText(weather.getCurrentTempC() + "˚C");
+        }
         humid.setText(weather.getHumidity() + "% Humidity");
         wind.setText("Wind " + Math.round(weather.getWind()) + " mph");
         date.setText(weather.getDate());
@@ -105,6 +114,7 @@ public class MainController implements Initializable {
         sunSet.setText(weather.convertSunRiseSunSet(weather.getSunSet()));
         fiveDayForecastButton.setVisible(true);
         weatherIcon.setVisible(true);
+        temp.setVisible(true);
         setWeatherIcon(panelIndex, weather.getIcon());
         description.setText(weather.getDescription());
         riseIcon.setVisible(true);
@@ -150,15 +160,18 @@ public class MainController implements Initializable {
             case 1 -> weathers1 = new Weather();
             case 2 -> weathers2 = new Weather();
         }
+        // Reset temperature unit preference to Fahrenheit (default) for cleared panel
+        useFahrenheit[panelIndex] = true;
     }
 
     // Helper method to reset UI elements for a panel
-    private void resetPanel(Button addButton, Label addLabel, Button clear, Button fiveDayForecastButton, ImageView weatherIcon, Label sunRise, Label sunSet, Label description, Label temp, Label humid, Label wind, Label date, Label name, EmojiTextFlow riseIcon, Label sunriseLabel, EmojiTextFlow setIcon, Label sunsetLabel, EmojiTextFlow humidEmoji, EmojiTextFlow windEmoji) {
+    private void resetPanel(Button addButton, Label addLabel, Button clear, Button fiveDayForecastButton, ImageView weatherIcon, Label sunRise, Label sunSet, Label description, Button temp, Label humid, Label wind, Label date, Label name, EmojiTextFlow riseIcon, Label sunriseLabel, EmojiTextFlow setIcon, Label sunsetLabel, EmojiTextFlow humidEmoji, EmojiTextFlow windEmoji) {
         addButton.setVisible(true);
         addLabel.setVisible(true);
         clear.setVisible(false);
         fiveDayForecastButton.setVisible(false);
         weatherIcon.setVisible(false);
+        temp.setVisible(false);
         sunRise.setText("");
         sunSet.setText("");
         description.setText("");
@@ -207,11 +220,37 @@ public class MainController implements Initializable {
         // Forecast testForecast = Forecast.fetchWeatherForCity(formattedCity);
         // if ()
         switch (buttonId) {
-            case 0 -> FiveDayForecastController.setForecast(weathers0);
-            case 1 -> FiveDayForecastController.setForecast(weathers1);
-            case 2 -> FiveDayForecastController.setForecast(weathers2);
+            case 0 -> FiveDayForecastController.setForecast(weathers0, useFahrenheit[0]);
+            case 1 -> FiveDayForecastController.setForecast(weathers1, useFahrenheit[1]);
+            case 2 -> FiveDayForecastController.setForecast(weathers2, useFahrenheit[2]);
             default -> logger.log(Level.WARNING, "Invalid button ID:", buttonId);
         }
         switchView("FiveDayForecastView.fxml", event, 600, 350);
+    }
+
+    // Toggle temperature unit between Fahrenheit and Celsius
+    @FXML
+    private void toggleTemperatureUnit(ActionEvent event) {
+        Button tempButton = (Button) event.getSource();
+        String buttonId = tempButton.getId();
+        int panelIndex = Integer.parseInt(buttonId.replaceAll("\\D", ""));
+        
+        Weather weather = switch (panelIndex) {
+            case 0 -> weathers0;
+            case 1 -> weathers1;
+            case 2 -> weathers2;
+            default -> null;
+        };
+        
+        if (weather != null && !weather.isEmpty()) {
+            String currentText = tempButton.getText();
+            if (currentText.contains("˚F")) {
+                tempButton.setText(weather.getCurrentTempC() + "˚C");
+                useFahrenheit[panelIndex] = false;
+            } else {
+                tempButton.setText(weather.getCurrentTempF() + "˚F");
+                useFahrenheit[panelIndex] = true;
+            }
+        }
     }
 }
