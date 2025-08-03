@@ -62,7 +62,7 @@
 ![Blank Menu](screenshots/v1.1.0/BLANK_MENU-v1.1.0.png)
 
 ### Add Location
-![Add Location](screenshots/v1.1.0/ADD_LOCATION-v1.1.0.png)
+![Add Location](screenshots/v1.1.0/ADDS_LOCATION-v1.1.0.png)
 
 ### Populated Menu
 ![Populated Menu](screenshots/v1.1.0/POPULATED_MENU-v1.1.0.png)
