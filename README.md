@@ -6,6 +6,7 @@
 ## Features
 
     - Displays current weather conditions including temperature, humidity, wind speed, sunrise times, sunset times, current time and date.
+    - **Temperature Unit Toggle**: Click any temperature display to toggle between Fahrenheit (°F) and Celsius (°C) independently for each location.
     - Provides a 5-day weather forecast with high and low temperatures, weather conditions, and icons.
     - Allows users to add, remove and view weather for multiple locations.
     - Graphical user interface designed using JavaFX.
@@ -55,19 +56,22 @@
 ## Screenshots
 
 ### API Input
-![API Input](screenshots/API_INPUT.png)
+![API Input](screenshots/v1.1.0/API_INPUT-v1.1.0.png)
 
 ### Blank Menu
-![Blank Menu](screenshots/BLANK_MENU.png)
+![Blank Menu](screenshots/v1.1.0/BLANK_MENU-v1.1.0.png)
 
 ### Add Location
-![Add Location](screenshots/ADD_LOCATION.png)
+![Add Location](screenshots/v1.1.0/ADD_LOCATION-v1.1.0.png)
 
 ### Populated Menu
-![Populated Menu](screenshots/POPULATED_MENU.png)
+![Populated Menu](screenshots/v1.1.0/POPULATED_MENU-v1.1.0.png)
 
 ### 5 Day Forecast
-![5 Day Forecast](screenshots/5_DAY_FORECAST.png)
+![5 Day Forecast](screenshots/v1.1.0/5_DAY_FORECAST-v1.1.0.png)
+
+### Demo - Temperature Toggle Feature
+![Demo](screenshots/v1.1.0/demo-Celsius-v1.1.0.gif)
 
 ## Usage
 
@@ -78,11 +82,29 @@
         Enter the city name in the "Add Location" screen.
         Click the "Enter" button to collect and display the weather data.
 
+    - Toggle temperature units:
+        Click on any temperature display to switch between Fahrenheit (°F) and Celsius (°C). Each location maintains its own temperature unit preference.
+
     - View the forecast:
         Click on the "Forecast" button to view the 5-day weather forecast.
 
     - Clear the weather data:
         Click on the "Clear" button to remove the weather data for the specified location.
+
+## Version History
+
+### v1.1.0 - Temperature Unit Toggle
+    - Added clickable temperature displays that toggle between Fahrenheit (°F) and Celsius (°C)
+    - Independent temperature unit preferences for each weather location panel
+    - Enhanced UI with cohesive muted color scheme (Muted Teal, Dusty Rose, Forest Green)
+    - Temperature unit preferences persist across view transitions
+    - Bug fixes: FXML version compatibility and temperature unit persistence
+
+### v1.0.0 - Initial Release
+    - Core weather application functionality
+    - OpenWeatherMap API integration
+    - 5-day forecast display
+    - Multi-location support
 
 ## License
 
