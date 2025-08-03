@@ -13,10 +13,9 @@
 
 ## Requirements
 
-    - Java version: 21.0.3
-    - JavaFX: javafx-sdk-21.0.3
-    - JavaFX: javafx-jmods-21.0.3
-    - Apache Maven 3.9.8
+    - Java version: 21
+    - JavaFX: 21.0.5
+    - Apache Maven 3.9.8+
     - See `pom.xml` for the full list of dependencies using Maven.
 
 ## Setup
@@ -33,10 +32,11 @@
         |   |   |-- javaweathers/
         |   |   |   |-- AddLocationController.java: Controller for adding a new location.
         |   |   |   |-- AddWeatherApiController.java: Controller for adding a new weather API key.
+        |   |   |   |-- ConfigManager.java: Cross-platform configuration management.
         |   |   |   |-- Day.java: Represents a single day's weather data.
         |   |   |   |-- FiveDayForecastController.java: Controller for the 5-day forecast view.
         |   |   |   |-- Forecast.java: Collects and parses the 5-day weather forecast data.
-        |   |   |   |-- Launch.java: Ensures JavaFX application runs properly.
+        |   |   |   |-- Launcher.java: Ensures JavaFX application runs properly.
         |   |   |   |-- MainApplication.java: The main entry point of the application.
         |   |   |   |-- MainController.java: Controller for the main application view.
         |   |   |   |-- Weather.java: Collects and parses the current weather data.
@@ -52,6 +52,11 @@
         |   |   |-- javaweathers/
         |   |   |   |-- WeatherTest.java: Unit tests for the Weather class.
         |   |   |   |-- ForecastTest.java: Unit tests for the Forecast class.
+        |   |   |   |-- MainControllerTest.java: Unit tests for the MainController class.
+        |   |   |   |-- DayTest.java: Unit tests for the Day class.
+        |   |   |   |-- AddLocationControllerTest.java: Unit tests for the AddLocationController class.
+        |   |   |   |-- FiveDayForecastControllerTest.java: Unit tests for the FiveDayForecastController class.
+        |   |   |   |-- TestApp.java: TestFX application helper for UI testing.
 
 ## Screenshots
 
